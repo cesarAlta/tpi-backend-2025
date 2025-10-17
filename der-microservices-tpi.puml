@@ -1,0 +1,164 @@
+@startuml DER-TPI-Microservices
+!define table(x) class x << (T,#FFAAAA) >>
+hide methods
+hide stereotypes
+
+title Diagrama Entidad-Relación TPI-Backend\n(Separado por Microservicios)
+
+package "cliente-service" #E1F5FE {
+  table(Client) {
+    + client_id : BIGINT <<PK>>
+    --
+    name : VARCHAR(200)
+    document : VARCHAR(50)
+    phone : VARCHAR(50)
+    email : VARCHAR(100)
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+package "contenedor-service" #F3E5F5 {
+  table(Container) {
+    + container_id : BIGINT <<PK>>
+    --
+    code : VARCHAR(50)   'identificacion unica del contenedor
+    weight_kg : DECIMAL(10,2)
+    volume_m3 : DECIMAL(10,3)
+    status : VARCHAR(50) 'BORRADOR PROGRAMADA EN_TRANSITO ENTREGADA
+    client_id : BIGINT <<FK>>
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+package "camion-service" #E8F5E8 {
+  table(Truck) {
+    + truck_id : BIGINT <<PK>>
+    --
+    plate : VARCHAR(20)
+    driver_name : VARCHAR(150)
+    driver_phone : VARCHAR(50)
+    max_weight_kg : DECIMAL(12,2)
+    max_volume_m3 : DECIMAL(12,3)
+    fuel_consumption_l_per_km : DECIMAL(6,4)
+    cost_per_km : DECIMAL(10,2)
+    available : BOOLEAN
+    created_at : DATETIME
+  }
+}
+
+package "deposito-service" #FFF3E0 {
+  table(Depot) {
+    + depot_id : BIGINT <<PK>>
+    --
+    name : VARCHAR(150)
+    address : VARCHAR(300)
+    latitude : DECIMAL(10,7)
+    longitude : DECIMAL(10,7)
+    daily_storage_cost : DECIMAL(10,2)
+    created_at : DATETIME
+  }
+}
+
+package "solicitud-service" #FFEBEE {
+  table(Request) {
+    + request_id : BIGINT <<PK>>
+    --
+    request_number : VARCHAR(50) UNIQUE
+    container_id : BIGINT <<FK>>
+    client_id : BIGINT <<FK>>
+    status : VARCHAR(50) 'BORRADOR PROGRAMADA EN_TRANSITO ENTREGADA
+    estimated_cost : DECIMAL(12,2)
+    estimated_time_min : INT
+    final_cost : DECIMAL(12,2)
+    actual_time_min : INT
+    created_at : DATETIME
+    updated_at : DATETIME
+  }
+}
+
+package "ruta-service" #F1F8E9 {
+  table(Route) {
+    + route_id : BIGINT <<PK>>
+    --
+    request_id : BIGINT <<FK>>
+    total_tramos : INT
+    total_depots : INT
+    total_distance_km : DECIMAL(10,2)
+    estimated_time_min : INT
+    estimated_cost : DECIMAL(12,2)
+    created_at : DATETIME
+  }
+
+  table(Segment) {
+    + segment_id : BIGINT <<PK>>
+    --
+    route_id : BIGINT <<FK>>
+    origin_type : VARCHAR(30) 'ORIGEN DEPOT DESTINO
+    origin_lat : DECIMAL(10,7)
+    origin_lng : DECIMAL(10,7)
+    dest_lat : DECIMAL(10,7)
+    dest_lng : DECIMAL(10,7)
+    segment_type : VARCHAR(50) 'ORIGEN-DEP DEP-DEP DEP-DEST ORIGEN-DEST
+    status : VARCHAR(30) 'ESTIMADO ASIGNADO INICIADO FINALIZADO
+    estimated_distance_km : DECIMAL(10,2)
+    estimated_time_min : INT
+    estimated_cost : DECIMAL(12,2)
+    actual_distance_km : DECIMAL(10,2)
+    actual_time_min : INT
+    actual_cost : DECIMAL(12,2)
+    start_time : DATETIME
+    end_time : DATETIME
+    truck_id : BIGINT <<FK>>
+  }
+}
+
+package "tarifa-service" #FCE4EC {
+  table(Tariff) {
+    + tariff_id : BIGINT <<PK>>
+    --
+    name : VARCHAR(150)
+    base_cost_per_km : DECIMAL(10,2)
+    volume_range_min : DECIMAL(10,3)
+    volume_range_max : DECIMAL(10,3)
+    weight_range_min : DECIMAL(10,2)
+    weight_range_max : DECIMAL(10,2)
+    storage_cost_per_day : DECIMAL(10,2)
+    fuel_price_per_liter : DECIMAL(10,2)
+    created_at : DATETIME
+  }
+}
+
+' Relaciones entre microservicios (mediante APIs REST)
+Client "1" ..> "0..*" Container : "consulta via\ncliente-service API"
+Client "1" ..> "0..*" Request : "crea via\nsolicitud-service API"
+Container "1" ..> "0..1" Request : "referencia via\nsolicitud-service"
+Request "1" ..> "1..*" Route : "calcula via\nruta-service API"
+
+' Relaciones internas dentro de ruta-service
+Route "1" -- "1..*" Segment : "compuesta por"
+
+' Referencias externas (Foreign Keys virtuales via API)
+Segment ..> Truck : "asigna via\ncamion-service API\n(truck_id)"
+Segment ..> Depot : "referencia via\ndeposito-service API\n(coordenadas)"
+Container ..> Tariff : "calcula precio via\ntarifa-service API\n(volume/weight ranges)"
+
+' Notas explicativas
+note top of Client : **CLIENTE-SERVICE**\n- CRUD de clientes\n- Validación de datos de contacto
+note top of Container : **CONTENEDOR-SERVICE**\n- Gestión de contenedores\n- Validación peso/volumen\n- Estados del contenedor
+note top of Truck : **CAMION-SERVICE**\n- Gestión de flota\n- Control de disponibilidad\n- Validación de capacidad
+note top of Depot : **DEPOSITO-SERVICE**\n- Gestión de depósitos\n- Coordenadas geográficas\n- Costos de almacenamiento
+note top of Request : **SOLICITUD-SERVICE**\n- Orquestación de solicitudes\n- Estados de lifecycle\n- Coordinación entre servicios
+note top of Route : **RUTA-SERVICE**\n- Motor de cálculo de rutas\n- Integración Google Maps API\n- Optimización multi-depósito\n- Gestión de segmentos
+note top of Tariff : **TARIFA-SERVICE**\n- Configuración de precios\n- Rangos de peso/volumen\n- Costos base por km
+
+' Layout hints
+Client -[hidden]right- Container
+Container -[hidden]right- Truck
+Client -[hidden]down- Request
+Container -[hidden]down- Route
+Route -[hidden]right- Tariff
+Depot -[hidden]up- Truck
+
+@enduml

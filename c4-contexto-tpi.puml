@@ -1,0 +1,44 @@
+@startuml C4-Contexto-TPI
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Diagrama C4 - Contexto del Sistema TPI (Transporte de Contenedores)
+
+' Personas
+Person(cliente, "Cliente", "Empresa o persona que necesita transportar contenedores. Solicita traslados y consulta el seguimiento en tiempo real.")
+Person(operador, "Operador Logístico", "Personal administrativo que gestiona catálogos, asigna recursos (camiones) y supervisa operaciones.")
+Person(transportista, "Transportista", "Conductor que ejecuta los traslados, registra inicio/fin de tramos y actualiza estados en tiempo real.")
+
+' Sistema Principal
+System(tpi_system, "Sistema TPI-Backend", "Plataforma de gestión integral de transporte de contenedores. Coordina solicitudes, rutas, asignación de recursos y seguimiento logístico mediante arquitectura de microservicios.")
+
+' Sistemas Externos
+System_Ext(google_maps, "Google Maps API", "Servicio externo para cálculo de rutas, distancias, tiempos estimados y optimización geográfica.")
+System_Ext(keycloak_ext, "Keycloak (Identity Provider)", "Sistema de autenticación y autorización. Gestiona roles (cliente, operador, transportista) y tokens JWT.")
+System_Ext(frontend_web, "Aplicación Web Frontend", "Interfaz web para clientes y operadores. Permite gestionar solicitudes, consultar estados y administrar catálogos.")
+System_Ext(mobile_app, "Aplicación Móvil", "App para transportistas en campo. Permite actualizar estados de tramos, registrar tiempos y costos reales.")
+System_Ext(payment_system, "Sistema de Pagos", "Plataforma externa para procesamiento de pagos y facturación de servicios de transporte.")
+
+' Relaciones principales
+Rel(cliente, tpi_system, "Solicita traslados de contenedores, consulta seguimiento", "HTTPS/REST + JWT")
+Rel(operador, tpi_system, "Gestiona catálogos (camiones, depósitos, tarifas), asigna recursos", "HTTPS/REST + JWT")
+Rel(transportista, tpi_system, "Actualiza estados de tramos, registra tiempos reales", "HTTPS/REST + JWT")
+
+Rel(cliente, frontend_web, "Accede vía navegador web", "HTTPS")
+Rel(operador, frontend_web, "Administra sistema vía web", "HTTPS")
+Rel(transportista, mobile_app, "Usa app móvil en campo", "HTTPS")
+
+Rel(frontend_web, tpi_system, "Consume APIs", "HTTPS/REST + JWT")
+Rel(mobile_app, tpi_system, "Sincroniza datos", "HTTPS/REST + JWT")
+
+Rel(tpi_system, google_maps, "Calcula rutas óptimas, distancias y tiempos", "HTTPS/REST API")
+Rel(tpi_system, keycloak_ext, "Valida tokens, gestiona autenticación", "OpenID Connect/OAuth2")
+Rel(tpi_system, payment_system, "Procesa pagos de servicios", "HTTPS/REST API")
+
+' Notas adicionales
+Lay_R(cliente, operador)
+Lay_R(operador, transportista)
+Lay_D(frontend_web, mobile_app)
+
+SHOW_LEGEND()
+
+@enduml
