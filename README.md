@@ -200,28 +200,6 @@ Tariff (tariff_id, name, cost_per_km, volume_ranges, weight_ranges)
 | Solicitud  | `/api/v1/solicitudes`  | Ciclo de vida de solicitudes  |
 | Ruta       | `/api/v1/rutas`        | Cálculo y asignación de rutas |
 
-## 📊 Monitoreo y Logs
-
-### Logs Estructurados
-
-```bash
-# Ver logs de todos los servicios
-docker-compose logs
-
-# Logs específicos de un servicio
-docker-compose logs solicitud-service
-
-# Logs en tiempo real
-docker-compose logs -f ruta-service
-```
-
-### Métricas
-
-- Tiempo de respuesta de APIs
-- Precisión de estimaciones vs realidad
-- Utilización de camiones
-- Eficiencia de rutas
-
 ## 🎯 Entregables del Proyecto
 
 ### 📋 Entrega Inicial
@@ -261,7 +239,6 @@ docker-compose logs -f ruta-service
 ```
 tpi-backend-2025/
 ├── 📁 docs/                    # Documentación
-│   ├── DER.puml                # Diagrama Entidad-Relación
 │   ├── c4-contexto-tpi.puml    # Diagrama C4 de Contexto
 │   └── der-microservices-tpi.puml # DER por Microservicio
 ├── 📁 services/                # Microservicios
