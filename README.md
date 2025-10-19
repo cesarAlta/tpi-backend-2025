@@ -6,7 +6,6 @@
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://www.docker.com/)
 [![Keycloak](https://img.shields.io/badge/Security-Keycloak-red.svg)](https://www.keycloak.org/)
-[![MySQL](https://img.shields.io/badge/Database-MySQL-blue.svg)](https://www.mysql.com/)
 [![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-blue.svg)](https://www.postgresql.org/)
 
 ## 📋 Descripción del Proyecto
@@ -31,7 +30,7 @@ graph TB
     Operator[👨‍💼 Operador] --> Gateway
     Driver[🚛 Transportista] --> Gateway
 
-    Gateway --> Auth[🔐 Autenticacion]
+    Gateway --> Auth[🔐 Keycloak]
     Gateway --> MS1[📦 cliente-service]
     Gateway --> MS2[🏗️ contenedor-service]
     Gateway --> MS3[🚚 camion-service]
@@ -41,7 +40,6 @@ graph TB
     Gateway --> MS7[💰 tarifa-service]
 
     MS6 --> Maps[🌍 Google Maps API]
-    Auth --> Keycloak[ 🔑 Keycloak]
 ```
 
 ### 🔧 Microservicios Implementados
