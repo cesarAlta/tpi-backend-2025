@@ -106,6 +106,7 @@ Costo Total = Cargos de Gestión (fijo por cantidad de tramos)
 - **Peso y volumen**: Validación contra capacidad de camiones
 - **Estadía en depósitos**: Diferencia entre fechas reales de entrada/salida
 - **Consumo de combustible**: Específico por camión
+- **Precio del combustible**: Variable, valor actual por litro.
 
 ## 🗂️ Modelo de Datos
 
