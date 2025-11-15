@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JpaPostgresContainer extends JpaRepository<Container,Long> {
+public interface SpringDataContainer extends JpaRepository<Container,Long> {
 }
