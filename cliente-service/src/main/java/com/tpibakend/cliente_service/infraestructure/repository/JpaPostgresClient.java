@@ -7,3 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JpaPostgresClient extends JpaRepository<Client,Long> {
 }
+
+/*@Repository
+public interface JpaPostgresClient extends JpaRepository<Client,Long> {
+    Optional<Client> findByEmail(String email);
+}*/

@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      mvc:
+        routes: []  # Luego agregamos las rutas de los servicios
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

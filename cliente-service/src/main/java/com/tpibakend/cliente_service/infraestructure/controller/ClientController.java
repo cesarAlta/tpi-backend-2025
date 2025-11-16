@@ -26,3 +26,10 @@ public class ClientController {
         return ResponseEntity.ok("Create client endpoint");
     }
 }
+
+
+/*@PostMapping
+ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest request) {
+    Client client = clientService.registerClient(request);
+    return ResponseEntity.ok(client);
+}*/

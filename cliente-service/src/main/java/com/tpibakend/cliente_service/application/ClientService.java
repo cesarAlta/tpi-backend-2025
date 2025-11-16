@@ -19,3 +19,24 @@ public class ClientService {
         return jpaPostgresClient.save(client);
     }
 }
+
+/*@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class ClientService {
+
+    JpaPostgresClient repository;
+    ClientMapper mapper;
+
+    @Transactional
+    public Client registerClient(ClientRequest request) {
+
+        // Validación de email duplicado
+        repository.findByEmail(request.email()).ifPresent(c -> {
+            throw new ClientException("El email ya está registrado");
+        });
+
+        Client client = mapper.toEntity(request);
+        return repository.save(client);
+    }
+}*/
