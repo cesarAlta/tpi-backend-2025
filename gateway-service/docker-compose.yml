@@ -1,0 +1,9 @@
+gateway:
+  build: ./gateway
+  container_name: gateway
+  ports:
+    - "8080:8080"
+  depends_on:
+    - clientes-service
+    - solicitudes-service
+    - keycloak

@@ -17,14 +17,20 @@ public class ClientController {
 
     ClientService clientService;
 
+    @PostMapping
     @GetMapping("/{id}")
     ResponseEntity<?> getClient(@PathVariable Long id) {
         return ResponseEntity.ok("Client service is running");
     }
-    @PostMapping
+    @GetMapping("/{document}")
+    ResponseEntity<?> getByDocument(@PathVariable String document) {
+        Long id = clientService.getByDocument(document);
+        return ResponseEntity.ok(id);
+    }
     ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientRequest) {
         return ResponseEntity.ok("Create client endpoint");
     }
+
 }
 
 
