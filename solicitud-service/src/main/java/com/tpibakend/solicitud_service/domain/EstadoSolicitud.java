@@ -1,4 +1,4 @@
-package com.example.solicitudservice.model;
+package com.tpibakend.solicitud_service.domain;
 
 public enum EstadoSolicitud {
     BORRADOR,

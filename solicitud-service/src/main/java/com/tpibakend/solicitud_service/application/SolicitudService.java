@@ -1,7 +1,7 @@
-package com.example.solicitudservice.service;
+package com.tpibakend.solicitud_service.application;
 
-import com.example.solicitudservice.dto.SolicitudRequestDTO;
-import com.example.solicitudservice.model.Solicitud;
+import com.tpibakend.solicitud_service.infrastructure.controller.dto.SolicitudRequestDTO;
+import com.tpibakend.solicitud_service.domain.Solicitud;
 
 public interface SolicitudService {
 

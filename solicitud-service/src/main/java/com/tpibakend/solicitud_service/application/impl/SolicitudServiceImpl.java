@@ -1,3 +1,12 @@
+package com.tpibakend.solicitud_service.application.impl;
+
+import com.tpibakend.solicitud_service.application.SolicitudService;
+import com.tpibakend.solicitud_service.domain.Solicitud;
+import com.tpibakend.solicitud_service.infrastructure.controller.dto.SolicitudRequestDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+
 @Service
 @RequiredArgsConstructor
 public class SolicitudServiceImpl implements SolicitudService {
@@ -17,6 +26,11 @@ public class SolicitudServiceImpl implements SolicitudService {
                 .build();
 
         return repository.save(solicitud);
+    }
+
+    @Override
+    public Solicitud crearSolicitud(SolicitudRequestDTO dto) {
+        return null;
     }
 
     @Override

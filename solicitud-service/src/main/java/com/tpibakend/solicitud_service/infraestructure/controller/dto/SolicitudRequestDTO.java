@@ -1,4 +1,4 @@
-package com.example.solicitudservice.dto;
+package com.tpibakend.solicitud_service.infrastructure.controller.dto;
 
 import lombok.Data;
 import java.math.BigDecimal;

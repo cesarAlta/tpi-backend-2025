@@ -9,17 +9,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 @NoArgsConstructor
+@Data
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "client_id", nullable = false, unique = true)
     Long clientId;
+
     String name;
     String document;
     String phone;
     String email;
+
     @Column(name = "created_at")
     LocalDateTime createdAt;
     @Column(name = "updated_at")

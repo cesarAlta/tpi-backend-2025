@@ -1,3 +1,9 @@
+package com.tpibakend.solicitud_service.infraestructure.controller;
+
+import com.tpibakend.solicitud_service.application.SolicitudService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/solicitudes")
 @RequiredArgsConstructor

@@ -1,9 +1,7 @@
 package com.tpibakend.contenedor_service.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
@@ -11,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
+@Data
 @NoArgsConstructor
 public class Container {
     @Id
@@ -33,7 +31,7 @@ public class Container {
     private Status status;
 
     @JoinColumn(name = "client_id", nullable = false)
-    private Long clientId;
+    Long clientId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

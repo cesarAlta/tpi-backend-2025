@@ -5,13 +5,14 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
+@Data
 @NoArgsConstructor
 public class Tariff {
     @Id
