@@ -1,0 +1,73 @@
+services:
+  # POSTGRES de KEYCLOAK
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+  # KEYCLOAK (última versión estable)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: keycloak
+    command: start-dev
+    ports:
+      - "8180:8080"
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+
+      - DB_VENDOR=postgres
+      - DB_ADDR=keycloak-db
+      - DB_DATABASE=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+    depends_on:
+      - keycloak-db
+    restart: always
+
+# POSTGRES del MICROCLIENTE
+  clientes-db:
+    image: postgres:15
+    container_name: clientes-db
+    environment:
+      POSTGRES_DB: ${CLIENTES_DB}
+      POSTGRES_USER: ${CLIENTES_USER}
+      POSTGRES_PASSWORD: ${CLIENTES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - clientes-data:/var/lib/postgresql/data
+
+  # MICROSERVICIO CLIENTE
+  cliente-service:
+    build:
+      context: ./cliente-service
+      dockerfile: Dockerfile
+    container_name: cliente-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://clientes-db:5432/${CLIENTES_DB}
+      SPRING_DATASOURCE_USERNAME: ${CLIENTES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${CLIENTES_PASSWORD}
+
+      KEYCLOAK_URL: http://localhost:8180
+      KEYCLOAK_REALM: tpi-realm
+      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASS: ${KEYCLOAK_ADMIN_PASSWORD}
+
+    depends_on:
+      - clientes-db
+      - keycloak
+    ports:
+      - "8081:8081"
+    restart: always
+
+
+volumes:
+  keycloak-data:
+  clientes-data:

@@ -2,42 +2,44 @@ package com.tpibakend.contenedor_service.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class Container {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "container_id", nullable = false, unique = true)
-    private Long containerId;
+    Long containerId;
 
     @Column(name = "code", length = 50, nullable = false, unique = true)
-    private String code;
+    String code;
 
     @Column(name = "weight_kg", precision = 10, scale = 2, nullable = false)
-    private BigDecimal weightKg;
+    BigDecimal weightKg;
 
     @Column(name = "volume_m3", precision = 10, scale = 3, nullable = false)
-    private BigDecimal volumeM3;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 50, nullable = false)
-    private Status status;
+    BigDecimal volumeM3;
 
     @JoinColumn(name = "client_id", nullable = false)
-    private Long clientId;
+    Long clientId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
+
+    public static Container createNew(BigDecimal weightKg, BigDecimal volumeM3, Long clientId) {
+        return new Container(null, UUID.randomUUID().toString(), weightKg, volumeM3, clientId,
+                LocalDateTime.now(), null);
+    }
 }

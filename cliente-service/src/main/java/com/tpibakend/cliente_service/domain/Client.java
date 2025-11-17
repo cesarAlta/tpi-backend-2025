@@ -2,6 +2,7 @@ package com.tpibakend.cliente_service.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
 public class Client {
     @Id

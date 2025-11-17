@@ -1,0 +1,23 @@
+#server:
+#  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - TokenRelay
+      routes:
+        - id: clientes-service
+          uri: http://clientes-service:8081
+          predicates:
+            - Path=/clientes/**
+        - id: solicitudes-service
+          uri: http://solicitudes-service:8082
+          predicates:
+            - Path=/solicitudes/**
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/tpi-realm
