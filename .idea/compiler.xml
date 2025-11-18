@@ -8,23 +8,25 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for gateway" enabled="true">
+      <profile name="Annotation profile for deposito-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="tarifa-service" />
-        <module name="cliente-service" />
         <module name="camion-service" />
         <module name="deposito-service" />
-        <module name="ruta-service" />
-        <module name="solicitud-service" />
-        <module name="contenedor-service" />
-        <module name="gateway" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="cliente-service" target="17" />
+      <module name="contenedor-service" target="17" />
+      <module name="gateway" target="17" />
+      <module name="ruta-service" target="17" />
+      <module name="solicitud-service" target="17" />
+      <module name="tarifa-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

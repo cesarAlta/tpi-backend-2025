@@ -1,41 +1,4 @@
 services:
-  # POSTGRES de KEYCLOAK
-  keycloak-db:
-    image: postgres:15
-    container_name: keycloak-db
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: password
-    volumes:
-      - keycloak-data:/var/lib/postgresql/data
-    networks:
-      - keycloak_net
-
-  # KEYCLOAK (última versión estable)
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0.3
-    container_name: keycloak
-    command: start-dev
-    ports:
-      - "8180:8080"
-    environment:
-      KC_DB: postgres
-      KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_PORT: 5432
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: password
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-
-    depends_on:
-      - keycloak-db
-    networks:
-      - keycloak_net
-
-    restart: always
-
   # POSTGRES del MICROCLIENTE
   clientes-db:
     image: postgres:15
@@ -48,6 +11,9 @@ services:
       - "5433:5432"
     volumes:
       - clientes-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - clientes-network
 
   # MICROSERVICIO CLIENTE
   cliente-service:
@@ -58,23 +24,18 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://clientes-db:5432/${CLIENTES_DB}
       SPRING_DATASOURCE_USERNAME: ${CLIENTES_USER}
       SPRING_DATASOURCE_PASSWORD: ${CLIENTES_PASSWORD}
-
-      KEYCLOAK_URL: http://localhost:8180
-      KEYCLOAK_REALM: tpi-realm
-      KEYCLOAK_ADMIN_USER: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASS: ${KEYCLOAK_ADMIN_PASSWORD}
-
     depends_on:
       - clientes-db
       - keycloak
     ports:
       - "8081:8081"
+    networks:
+      - clientes-network
     restart: always
 
-
 volumes:
-  keycloak-data:
   clientes-data:
+
 networks:
-  keycloak_net:
-    driver: bridge
+    clientes-network:
+        driver: bridge
