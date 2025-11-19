@@ -1,29 +1,46 @@
 package com.tpibackend.ruta_service.application.service;
 
-import com.tpibackend.ruta_service.application.dto.SegmentoDTO;
-import com.tpibackend.ruta_service.application.exception.RutaNotFoundException;
-import com.tpibackend.ruta_service.application.exception.SegmentoNotFoundException;
-import com.tpibackend.ruta_service.domain.model.Ruta;
 import com.tpibackend.ruta_service.domain.model.Segmento;
-import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaSegmentoRepository;
-
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SegmentoApplicationService {
 
-    private final JpaSegmentoRepository segmentoRepository;
-    private final JpaRutaRepository rutaRepository;
+    JpaSegmentoRepository segmentoRepository;
 
-    public SegmentoApplicationService(JpaSegmentoRepository segmentoRepository,
-                                      JpaRutaRepository rutaRepository) {
-        this.segmentoRepository = segmentoRepository;
-        this.rutaRepository = rutaRepository;
+    public Segmento createSegmento(Segmento segmento) {
+        return segmentoRepository.save(segmento);
     }
+
+    public Segmento getSegmento(Long id) {
+        return segmentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("SEGMENTO_NOT_FOUND"));
+    }
+
+    public List<Segmento> getSegmentosByRuta(Long rutaId) {
+        return segmentoRepository.findByRutaId(rutaId);
+    }
+
+    public Segmento updateSegmento(Segmento segmento) {
+        // Si necesitás validaciones futuras, irán aquí
+        return segmentoRepository.save(segmento);
+    }
+
+    public void deleteSegmento(Long id) {
+        if (!segmentoRepository.existsById(id)) {
+            throw new RuntimeException("SEGMENTO_NOT_FOUND");
+        }
+        segmentoRepository.deleteById(id);
+    }
+}
 
     /*public SegmentoDTO crearSegmento(Long rutaId, SegmentoDTO dto) {
 
@@ -63,4 +80,3 @@ public class SegmentoApplicationService {
                 .map(SegmentoDTO::from)
                 .toList();
     }*/
-}

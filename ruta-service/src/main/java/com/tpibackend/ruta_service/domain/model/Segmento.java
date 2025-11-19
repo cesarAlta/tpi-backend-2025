@@ -7,21 +7,22 @@ import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "Segmento")
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "segment")
 public class Segmento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "segment_id")
     private Long segmentoId;
 
     @ManyToOne
-    @JoinColumn(name = "ruta_id")
+    @JoinColumn(name = "route_id")
     private Ruta ruta;
 
     private String originType;
@@ -35,16 +36,24 @@ public class Segmento {
     private String segmentType;
     private String status;
 
+    @Column(precision = 10, scale = 2)
     private BigDecimal estimatedDistanceKm;
+
     private Integer estimatedTimeMin;
+
+    @Column(precision = 12, scale = 2)
     private BigDecimal estimatedCost;
 
+    @Column(precision = 10, scale = 2)
     private BigDecimal actualDistanceKm;
+
     private Integer actualTimeMin;
+
+    @Column(precision = 12, scale = 2)
     private BigDecimal actualCost;
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    private Long truckId;
+    private Long truckId;  // viene del camion-service
 }

@@ -2,28 +2,41 @@ package com.tpibackend.ruta_service.application.service;
 
 import com.tpibackend.ruta_service.application.dto.RutaRequestDTO;
 import com.tpibackend.ruta_service.application.dto.RutaResponseDTO;
-import com.tpibackend.ruta_service.application.exception.RutaNotFoundException;
 import com.tpibackend.ruta_service.domain.model.Ruta;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
-import com.tpibackend.ruta_service.infrastructure.repository.JpaSegmentoRepository;
-
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.AccessLevel;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RutaApplicationService {
 
-    private final JpaRutaRepository rutaRepository;
-    private final JpaSegmentoRepository segmentoRepository;
+    JpaRutaRepository rutaRepository;
 
-    public RutaApplicationService(JpaRutaRepository rutaRepository,
-                                  JpaSegmentoRepository segmentoRepository) {
-        this.rutaRepository = rutaRepository;
-        this.segmentoRepository = segmentoRepository;
+    public RutaResponseDTO createRuta(RutaRequestDTO dto) {
+
+        // Ruta nueva
+        Ruta ruta = new Ruta();
+        ruta.setRequestId(dto.getRequestId());
+        ruta.setTotalTramos(0);
+        ruta.setTotalDepots(0);
+
+        ruta = rutaRepository.save(ruta);
+
+        return RutaResponseDTO.from(ruta);
     }
+
+    public RutaResponseDTO getRuta(Long id){
+        Ruta ruta = rutaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("RUTA_NOT_FOUND"));
+
+        return RutaResponseDTO.from(ruta);
+    }
+}
 
  /*   public RutaResponseDTO crearRuta(RutaRequestDTO dto) {
 
@@ -56,4 +69,3 @@ public class RutaApplicationService {
                 .map(RutaResponseDTO::from)
                 .toList();
     }*/
-}
