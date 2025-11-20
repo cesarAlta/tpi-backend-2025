@@ -23,8 +23,12 @@ public class SegmentoController {
 
     @PostMapping
     public ResponseEntity<SegmentoResponse> create(@RequestBody SegmentoRequest request) {
-        val segmento = SegmentoMapper.toEntity(request);
+
+        val ruta = service.getRuta(request.getRutaId()); // esto depende de tu servicio
+        val segmento = SegmentoMapper.toEntity(request, ruta);
+
         val saved = service.createSegmento(segmento);
+
         return ResponseEntity.ok(SegmentoMapper.toResponse(saved));
     }
 
@@ -50,9 +54,9 @@ public class SegmentoController {
             @RequestBody SegmentoRequest request) {
 
         val existing = service.getSegmento(id);
-        existing.setOrigenTexto(request.getOrigenTexto());
-        existing.setDestinoTexto(request.getDestinoTexto());
-        existing.setDistanciaKm(request.getDistanciaKm());
+        existing.setEstimatedDistanceKm(request.getEstimatedDistanceKm());
+        existing.setEstimatedCost(request.getEstimatedCost());
+        existing.setEstimatedTimeMin(request.getEstimatedTimeMin());
 
         val updated = service.updateSegmento(existing);
         return ResponseEntity.ok(SegmentoMapper.toResponse(updated));

@@ -4,6 +4,7 @@ import com.tpibackend.ruta_service.application.dto.RutaRequestDTO;
 import com.tpibackend.ruta_service.application.dto.RutaResponseDTO;
 import com.tpibackend.ruta_service.domain.model.Ruta;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
+@Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RutaApplicationService {

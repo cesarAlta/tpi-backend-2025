@@ -1,7 +1,10 @@
 package com.tpibackend.ruta_service.application.service;
 
+import com.tpibackend.ruta_service.domain.model.Ruta;
 import com.tpibackend.ruta_service.domain.model.Segmento;
+import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaSegmentoRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
@@ -10,11 +13,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SegmentoApplicationService {
 
-    JpaSegmentoRepository segmentoRepository;
+    private final JpaSegmentoRepository segmentoRepository;
+    private final JpaRutaRepository rutaRepository;
+
+    public Ruta getRuta(Long rutaId) {
+        return rutaRepository.findById(rutaId)
+                .orElseThrow(() -> new RuntimeException("Ruta no encontrada " + rutaId));
+    }
 
     public Segmento createSegmento(Segmento segmento) {
         return segmentoRepository.save(segmento);

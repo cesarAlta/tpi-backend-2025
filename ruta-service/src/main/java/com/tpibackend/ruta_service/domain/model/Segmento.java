@@ -3,7 +3,7 @@ package com.tpibackend.ruta_service.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
+import com.tpibackend.ruta_service.domain.model.Ruta;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
