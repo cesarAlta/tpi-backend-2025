@@ -5,18 +5,18 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/tpi-backend
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI}
 server:
   port: 8080
 
 clientes-service:
-  url: http://localhost:8081
+  url: http://cliente-service:8081
 
-solicitudes-service:
-  url: http://localhost:8082
+contenedor-service:
+  url: http://contenedor-service:8082
 
-keycloak:
-  url: http://localhost:8180
+solicitud-service:
+  url: http://solicitud-service:8084
 
   cloud:
     gateway:

@@ -11,11 +11,16 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 @EnableWebFluxSecurity
 public class GWConfig {
     @Bean
-    public RouteLocator configurarRutas(RouteLocatorBuilder builder, @Value("${clientes-service.url}") String uriClienteService
+    public RouteLocator configurarRutas(RouteLocatorBuilder builder,
+                                        @Value("${clientes-service.url}") String uriClienteService,
+                                        @Value("${solicitud-service.url}") String uriSolicitudService,
+                                        @Value("${contenedor-service.url}") String uriContenedorService
     ) {
         return builder.routes()
                 // Ruteo al Microservicio de Entradas
                 .route(p -> p.path("/api/clientes/**").uri(uriClienteService))
+                .route(p -> p.path("/api/solicitudes/**").uri(uriSolicitudService))
+                .route(p -> p.path("/api/contenedores/**").uri(uriContenedorService))
                 .build();
     }
 }
