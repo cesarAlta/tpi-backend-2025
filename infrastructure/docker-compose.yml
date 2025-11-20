@@ -220,6 +220,18 @@ services:
     networks:
       - tpi-net
 
+  geoapi:
+    build:
+      context: ../geoapi
+      dockerfile: Dockerfile
+    container_name: geoapi
+    ports:
+      - "8088:8088"
+    environment:
+      GOOGLE_MAPS_APIKEY: ${GOOGLE_MAPS_APIKEY}
+    networks:
+      - tpi-net
+
   # -----------------------------
   # 📌 API GATEWAY
   # -----------------------------
@@ -241,6 +253,47 @@ services:
     networks:
       - tpi-net
 
+  # -----------------------------
+  # 📌 KEYCLOAK + POSTGRES
+  # -----------------------------
+
+  keycloak-db:
+    image: postgres:16
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: keycloak_user
+      POSTGRES_PASSWORD: keycloak_pass
+    volumes:
+      - keycloak_data:/var/lib/postgresql/data
+    networks:
+      - tpi-net
+    ports:
+      - "5440:5432"   # opcional: solo si querés acceder desde el host
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_USERNAME: keycloak_user
+      KC_DB_PASSWORD: keycloak_pass
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak_db
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8180:8080"        # Keycloak quedará en http://localhost:8180
+    depends_on:
+      - keycloak-db
+    networks:
+      - tpi-net
+    restart: always
+
+
 # -----------------------------
 # 📌 VOLUMENES
 # -----------------------------
@@ -260,41 +313,4 @@ networks:
   tpi-net:
     driver: bridge
 
-
-
-  # ==========================
-  # KEYCLOAK
-  # ==========================
-
-#  keycloak:
-#    image: quay.io/keycloak/keycloak:24.0
-#    container_name: keycloak
-#    command:
-#      - start-dev
-#    environment:
-#      KC_DB: postgres
-#      KC_DB_URL: jdbc:postgresql://postgres_keycloak:5432/keycloak_db
-#      KC_DB_USERNAME: admin
-#      KC_DB_PASSWORD: admin
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - postgres_keycloak
-#    networks:
-#      - microservices-net
-
-
-#  postgres_keycloak:
-#    image: postgres:16
-#    container_name: postgres_keycloak
-#    environment:
-#      POSTGRES_DB: keycloak_db
-#      POSTGRES_USER: admin
-#      POSTGRES_PASSWORD: admin
-#    volumes:
-#      - keycloak_data:/var/lib/postgresql/data
-#    networks:
-#      - microservices-net
 

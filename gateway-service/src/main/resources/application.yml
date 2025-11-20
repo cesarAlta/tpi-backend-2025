@@ -17,3 +17,11 @@ solicitudes-service:
 
 keycloak:
   url: http://localhost:8180
+
+  cloud:
+    gateway:
+      routes:
+        - id: geo-service
+          uri: http://geo-service:8088
+          predicates:
+            - Path=/geo/**

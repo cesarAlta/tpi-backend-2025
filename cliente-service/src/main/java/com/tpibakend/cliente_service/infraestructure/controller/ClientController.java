@@ -22,6 +22,7 @@ public class ClientController {
     ResponseEntity<?> getClient(@PathVariable Long id) {
         return ResponseEntity.ok("Client service is running");
     }
+
     @GetMapping("/{document}")
     ResponseEntity<?> getByDocument(@PathVariable String document) {
         Long id = clientService.getByDocument(document);
