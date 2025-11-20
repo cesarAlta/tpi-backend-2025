@@ -1,0 +1,143 @@
+services:
+  # POSTGRES de KEYCLOAK
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+    networks:
+      - keycloak_net
+  # KEYCLOAK (última versión estable)
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: keycloak
+    hostname: keycloak
+    command:  start-dev
+    ports:
+      - "8081:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      - keycloak-db
+    networks:
+      - keycloak_net
+    restart: always
+
+  gateway:
+    build:
+      dockerfile: Dockerfile
+      context: ./gateway-service
+    image: tpi/gateway:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    depends_on:
+      - keycloak
+    networks:
+      - keycloak_net
+      - clientes-network
+
+  # MICROSERVICIO CLIENTE DB
+  clientes-db:
+    image: postgres:15
+    container_name: clientes-db
+    environment:
+      POSTGRES_DB: ${CLIENTES_DB}
+      POSTGRES_USER: ${CLIENTES_USER}
+      POSTGRES_PASSWORD: ${CLIENTES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - clientes-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - clientes-network
+
+  # MICROSERVICIO CLIENTE
+
+  cliente-service:
+    container_name: cliente-service
+    image: tpi/cliente-service:latest
+    build:
+      dockerfile: Dockerfile
+      context: ./cliente-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://clientes-db:5432/${CLIENTES_DB}
+      SPRING_DATASOURCE_USERNAME: ${CLIENTES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${CLIENTES_PASSWORD}
+
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    depends_on:
+      - clientes-db
+    expose:
+        - "8082"
+    networks:
+      - clientes-network
+      - keycloak_net
+    restart: always
+
+  # MICROSERVICIO CLIENTE
+  solicitud-db:
+    image: postgres:15
+    container_name: solicitud-db
+    environment:
+      POSTGRES_DB: ${SOLICITUD_DB}
+      POSTGRES_USER: ${SOLICITUD_USER}
+      POSTGRES_PASSWORD: ${SOLICITUD_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - solicitud-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - solicitud-network
+
+  # MICROSERVICIO CLIENTE
+  solicitud-service:
+    container_name: solicitud-service
+    image: tpi/solicitud-service:latest
+    build:
+      dockerfile: Dockerfile
+      context: ./solicitud-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://solicitud-db:5432/${SOLICITUD_DB}
+      SPRING_DATASOURCE_USERNAME: ${SOLICITUD_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SOLICITUD_PASSWORD}
+
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    depends_on:
+      - solicitud-db
+    expose:
+      - "8083"
+    networks:
+      - solicitud-network
+      - keycloak_net
+      - clientes-network
+    restart: always
+
+
+volumes:
+  keycloak-data:
+  clientes-data:
+  solicitud-data:
+
+networks:
+  clientes-network:
+    driver: bridge
+  keycloak_net:
+    driver: bridge
+  solicitud-network:
+    driver: bridge
