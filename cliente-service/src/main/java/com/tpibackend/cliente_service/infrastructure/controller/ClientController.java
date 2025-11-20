@@ -32,6 +32,12 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
+    @GetMapping("/document/{document}")
+    ResponseEntity<?> getByDocument(@PathVariable String document) {
+        Long id  = clientService.getByDocument(document);
+        return ResponseEntity.ok(id);
+    }
+
     @PostMapping
     ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientRequest) {
         return ResponseEntity.ok("Create client endpoint");

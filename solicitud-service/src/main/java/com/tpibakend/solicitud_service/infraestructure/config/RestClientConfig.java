@@ -9,14 +9,14 @@ public class RestClientConfig {
     @Bean
     public RestClient clientServiceClient() {
         return RestClient.builder()
-                .baseUrl("http://cliente-service/api/clients")
+                .baseUrl("http://cliente-service/api/clientes")
                 .build();
     }
 
     @Bean
     public RestClient containerServiceClient() {
         return RestClient.builder()
-                .baseUrl("http://contenedor-service/api/containers")
+                .baseUrl("http://contenedor-service/api/contenedores")
                 .build();
     }
 

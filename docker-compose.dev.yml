@@ -123,7 +123,7 @@ services:
     depends_on:
       - solicitud-db
     expose:
-      - "8083"
+      - "8084"
     networks:
       - solicitud-network
       - keycloak_net
@@ -162,7 +162,7 @@ services:
     depends_on:
       - contenedor-db
     expose:
-      - "8083"
+      - "8084"
     networks:
       - contenedor-network
       - solicitud-network

@@ -1,5 +1,6 @@
 package com.tpibackend.cliente_service.domain.port.in;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import com.tpibackend.cliente_service.domain.Client;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface FindClientUseCase {
     List<Client> findAll();
     Client findById(Long id);
 
+    Client findByDocument(String document);
 }

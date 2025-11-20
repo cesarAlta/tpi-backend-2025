@@ -25,4 +25,9 @@ public class FindClientUseCaseImpl implements FindClientUseCase {
     public Client findById(Long id) {
         return clientRepositoryPort.findById(id).orElseThrow(()-> new ClientException("CLIENT_NOT_FOUND"));
     }
+
+    @Override
+    public Client findByDocument(String document) {
+        return clientRepositoryPort.findByDocument(document).orElseThrow(()-> new ClientException("CLIENT_NOT_FOUND"));
+    }
 }

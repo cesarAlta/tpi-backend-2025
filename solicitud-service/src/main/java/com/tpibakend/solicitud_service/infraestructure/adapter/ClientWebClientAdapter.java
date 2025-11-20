@@ -40,7 +40,7 @@ public class ClientWebClientAdapter implements ClientWebClientPort {
     @Override
     public Optional<Long> getByDocument(String document) {
         Long id = restClient.get()
-                .uri("/{document}", document)
+                .uri("/document/{document}", document)
                 .retrieve()
                 .body(Long.class);
         return Optional.of(id);

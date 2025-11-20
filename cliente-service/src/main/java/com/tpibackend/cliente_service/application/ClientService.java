@@ -39,4 +39,8 @@ public class ClientService {
     public ClientResponse getClient(Long id) {
         return mapper.toClientResponse(findClientUseCase.findById(id));
     }
+
+    public Long getByDocument(String document) {
+        return findClientUseCase.findByDocument(document).getClientId();
+    }
 }
