@@ -1,16 +1,18 @@
 server:
-  port: 8082
+  port: 8084
 
 spring:
   application:
     name: solicitud-service
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI}
   datasource:
-    url: jdbc:postgresql://postgres_solicitud:5432/solicitud_db
-    username: solicitud_user
-    password: solicitud_pass
-    driver-class-name: org.postgresql.Driver
-
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,9 +20,4 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-springdoc:
-  api-docs:
-    enabled: true
-  swagger-ui:
-    enabled: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect

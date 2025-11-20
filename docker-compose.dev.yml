@@ -16,7 +16,7 @@ services:
     image: quay.io/keycloak/keycloak:24.0.3
     container_name: keycloak
     hostname: keycloak
-    command:  start-dev
+    command: start-dev
     ports:
       - "8081:8080"
     environment:
@@ -39,7 +39,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./gateway-service
-    image: tpi/gateway:latest
+    image: tpi/gateway
     ports:
       - "8080:8080"
     environment:
@@ -70,7 +70,7 @@ services:
 
   cliente-service:
     container_name: cliente-service
-    image: tpi/cliente-service:latest
+    image: tpi/cliente-service
     build:
       dockerfile: Dockerfile
       context: ./cliente-service
@@ -83,13 +83,15 @@ services:
     depends_on:
       - clientes-db
     expose:
-        - "8082"
+      - "8082"
     networks:
       - clientes-network
+      - contenedor-network
+      - solicitud-network
       - keycloak_net
     restart: always
 
-  # MICROSERVICIO CLIENTE
+  # MICROSERVICIO SOLICITUD
   solicitud-db:
     image: postgres:15
     container_name: solicitud-db
@@ -98,14 +100,14 @@ services:
       POSTGRES_USER: ${SOLICITUD_USER}
       POSTGRES_PASSWORD: ${SOLICITUD_PASSWORD}
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - solicitud-data:/var/lib/postgresql/data
     restart: always
     networks:
       - solicitud-network
 
-  # MICROSERVICIO CLIENTE
+  # MICROSERVICIO SOLICITUD
   solicitud-service:
     container_name: solicitud-service
     image: tpi/solicitud-service:latest
@@ -126,13 +128,54 @@ services:
       - solicitud-network
       - keycloak_net
       - clientes-network
+    restart: always 
+  
+  # MICROSERVICIO CONTENEDOR DB
+  contenedor-db:
+    image: postgres:15
+    container_name: contenedor-db
+    environment:
+      POSTGRES_DB: ${CONTENEDOR_DB}
+      POSTGRES_USER: ${CONTENEDOR_USER}
+      POSTGRES_PASSWORD: ${CONTENEDOR_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - contenedor-data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - contenedor-network
+
+  # MICROSERVICIO CONTENEDOR
+  contenedor-service:
+    container_name: contenedor-service
+    image: tpi/contenedor-service:latest
+    build:
+      dockerfile: Dockerfile
+      context: ./contenedor-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://contenedor-db:5432/${CONTENEDOR_DB}
+      SPRING_DATASOURCE_USERNAME: ${CONTENEDOR_USER}
+      SPRING_DATASOURCE_PASSWORD: ${CONTENEDOR_PASSWORD}
+
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    depends_on:
+      - contenedor-db
+    expose:
+      - "8083"
+    networks:
+      - contenedor-network
+      - solicitud-network
+      - keycloak_net
+      - clientes-network
     restart: always
 
-
 volumes:
+  contenedor-data:
   keycloak-data:
   clientes-data:
   solicitud-data:
+
 
 networks:
   clientes-network:
@@ -140,4 +183,6 @@ networks:
   keycloak_net:
     driver: bridge
   solicitud-network:
+    driver: bridge
+  contenedor-network:
     driver: bridge

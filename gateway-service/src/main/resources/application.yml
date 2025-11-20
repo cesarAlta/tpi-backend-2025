@@ -13,9 +13,8 @@ server:
 clientes-service:
   url: http://cliente-service:8082
 
-solicitud-service:
-  url: http://solicitud-service:8083
-
 contenedor-service:
   url: http://contenedor-service:8083
 
+solicitud-service:
+  url: http://solicitud-service:8084

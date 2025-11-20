@@ -27,7 +27,7 @@ public class ClientController {
     }
 
     @GetMapping
-    ResponseEntity<?> getAll(@PathVariable Long id) {
+    ResponseEntity<?> getAll() {
         List<ClientResponse> clients = clientService.getAll();
         return ResponseEntity.ok(clients);
     }
