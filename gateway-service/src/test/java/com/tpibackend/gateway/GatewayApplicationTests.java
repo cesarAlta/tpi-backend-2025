@@ -1,4 +1,4 @@
-package com.tpibakend.gateway;
+package com.tpibackend.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
