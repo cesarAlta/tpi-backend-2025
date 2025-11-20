@@ -1,4 +1,4 @@
-package com.tpibakend.contenedor_service.infraestructure.controller.dto;
+package com.tpibackend.contenedor_service.infraestructure.controller.dto;
 
 import jakarta.validation.constraints.NotNull;
 

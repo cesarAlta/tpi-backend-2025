@@ -1,4 +1,4 @@
-package com.tpibakend.contenedor_service;
+package com.tpibackend.contenedor_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

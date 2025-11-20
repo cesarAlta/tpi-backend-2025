@@ -1,33 +1,40 @@
-package com.tpibakend.contenedor_service.application;
+package com.tpibackend.contenedor_service.application;
 
-import com.tpibakend.contenedor_service.application.exception.ContainerException;
-import com.tpibakend.contenedor_service.domain.Container;
-import com.tpibakend.contenedor_service.infraestructure.controller.dto.ContainerRequest;
-import com.tpibakend.contenedor_service.infraestructure.persistence.SpringDataContainer;
+import com.tpibackend.contenedor_service.application.exception.ContainerException;
+import com.tpibackend.contenedor_service.domain.Container;
+import com.tpibackend.contenedor_service.domain.port.in.CreateContainerUseCase;
+import com.tpibackend.contenedor_service.domain.port.in.FindContainerUseCase;
+import com.tpibackend.contenedor_service.infraestructure.controller.dto.ContainerRequest;
+import com.tpibackend.contenedor_service.infraestructure.controller.dto.ContainerResponse;
+import com.tpibackend.contenedor_service.infraestructure.persistence.SpringDataContainer;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ContainerService {
-    SpringDataContainer springDataContainer;
-    public Container createContainer(ContainerRequest containerRequest) {
-        Container container = Container.createNew(
-                containerRequest.weightKg(),containerRequest.volumeM3(),containerRequest.clientId()
-        );
-        return springDataContainer.save(container);
+    CreateContainerUseCase createContainerUseCase;
+    FindContainerUseCase findContainerUseCase;
+
+    public Long createContainer(ContainerRequest containerRequest) {
+        Container container = createContainerUseCase.execute(containerRequest);
+        return container.getContainerId();
     }
 
-    public Container getContainer(Long id) {
-        return getContainerById(id);
+    public ContainerResponse getContainer(Long id) {
+        return Mapper.toContainerResponse(findContainerUseCase.findById(id));
+
     }
 
-    private Container getContainerById(Long id) {
-        return springDataContainer.findById(id).orElseThrow(()-> new ContainerException("CONTAINER_NOT_FOUND"));
+    public List<ContainerResponse> getAll() {
+        return findContainerUseCase.findAll().stream()
+                .map(Mapper::toContainerResponse)
+                .toList();
     }
 }

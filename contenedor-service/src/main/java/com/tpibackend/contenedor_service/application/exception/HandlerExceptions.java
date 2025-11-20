@@ -1,4 +1,4 @@
-package com.tpibakend.contenedor_service.application.exception;
+package com.tpibackend.contenedor_service.application.exception;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;

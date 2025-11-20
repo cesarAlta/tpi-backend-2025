@@ -1,4 +1,4 @@
-package com.tpibakend.contenedor_service.application.exception;
+package com.tpibackend.contenedor_service.application.exception;
 
 public class ContainerException extends RuntimeException{
     public ContainerException( String message) {

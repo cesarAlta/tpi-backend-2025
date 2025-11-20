@@ -1,6 +1,6 @@
-package com.tpibakend.contenedor_service.infraestructure.persistence;
+package com.tpibackend.contenedor_service.infraestructure.persistence;
 
-import com.tpibakend.contenedor_service.domain.Container;
+import com.tpibackend.contenedor_service.domain.Container;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

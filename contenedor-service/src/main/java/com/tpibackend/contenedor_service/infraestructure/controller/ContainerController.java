@@ -1,7 +1,8 @@
-package com.tpibakend.contenedor_service.infraestructure.controller;
+package com.tpibackend.contenedor_service.infraestructure.controller;
 
-import com.tpibakend.contenedor_service.application.ContainerService;
-import com.tpibakend.contenedor_service.infraestructure.controller.dto.ContainerRequest;
+import com.tpibackend.contenedor_service.application.ContainerService;
+import com.tpibackend.contenedor_service.infraestructure.controller.dto.ContainerRequest;
+import com.tpibackend.contenedor_service.infraestructure.controller.dto.ContainerResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/containers")
+@RequestMapping("/api/contenedores")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class ContainerController {
@@ -24,8 +27,13 @@ public class ContainerController {
     }
     @GetMapping("/{id}")
     ResponseEntity<?> getContainer(@PathVariable Long id) {
-        val container = containerService.getContainer(id);
-        return ResponseEntity.ok(container);
+        val containerResponse = containerService.getContainer(id);
+        return ResponseEntity.ok(containerResponse);
+    }
+    @GetMapping
+    ResponseEntity<?> getAll() {
+        List<ContainerResponse> containerResponse = containerService.getAll();
+        return ResponseEntity.ok(containerResponse);
     }
 
 }

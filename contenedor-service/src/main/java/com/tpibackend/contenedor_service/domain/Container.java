@@ -1,8 +1,9 @@
-package com.tpibakend.contenedor_service.domain;
+package com.tpibackend.contenedor_service.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
@@ -14,7 +15,8 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class    Container {
+@Getter
+public class Container {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "container_id", nullable = false, unique = true)
@@ -32,14 +34,7 @@ public class    Container {
     @JoinColumn(name = "client_id", nullable = false)
     Long clientId;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    LocalDateTime updatedAt;
-
     public static Container createNew(BigDecimal weightKg, BigDecimal volumeM3, Long clientId) {
-        return new Container(null, UUID.randomUUID().toString(), weightKg, volumeM3, clientId,
-                LocalDateTime.now(), null);
+        return new Container(null, UUID.randomUUID().toString(), weightKg, volumeM3, clientId);
     }
 }
