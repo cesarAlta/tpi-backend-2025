@@ -305,6 +305,7 @@ volumes:
   deposito_data:
   ruta_data:
   tarifa_data:
+  keycloak_data:
 
 # -----------------------------
 # 📌 RED
