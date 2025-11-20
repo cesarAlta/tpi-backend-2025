@@ -6,14 +6,14 @@ import com.tpibakend.solicitud_service.infraestructure.controller.dto.RequestRes
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.metamodel.mapping.ordering.ast.RootSequencePart;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/requests")
+@RequestMapping("api/v1/solicitudes")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RequestController {
@@ -22,6 +22,18 @@ public class RequestController {
     @PostMapping
     ResponseEntity<?> createRequest(@RequestBody RequestCreateRequest requestCreateRequest) {
         RequestResponse resp = requestService.createRequest(requestCreateRequest);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(resp);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<?> getRequest(@PathVariable Long id) {
+        RequestResponse requestResponse = requestService.findRequestById(id);
+        return ResponseEntity.ok().body(requestResponse);
+    }
+
+    @GetMapping
+    ResponseEntity<?> getAll() {
+        List<RequestResponse> res = requestService.getAll();
+        return ResponseEntity.ok().body(res);
     }
 }
