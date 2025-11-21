@@ -269,7 +269,7 @@ services:
     networks:
       - tpi-net
     ports:
-      - "5440:5432"   # opcional: solo si querés acceder desde el host
+      - "5440:5432"   # opcional: solo para acceder desde el host
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.3

@@ -3,6 +3,8 @@ package com.tpibackend.ruta_service.application.service;
 import com.tpibackend.ruta_service.application.dto.RutaRequestDTO;
 import com.tpibackend.ruta_service.application.dto.RutaResponseDTO;
 import com.tpibackend.ruta_service.domain.model.Ruta;
+import com.tpibackend.ruta_service.infrastructure.client.GeoApiClient;
+import com.tpibackend.ruta_service.infrastructure.client.dto.DistanciaDTO;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,12 @@ import org.springframework.stereotype.Service;
 public class RutaApplicationService {
 
     JpaRutaRepository rutaRepository;
+
+    private final GeoApiClient geoApiClient;
+
+    public DistanciaDTO calcularDistancia(String origen, String destino) {
+        return geoApiClient.obtenerDistancia(origen, destino);
+    }
 
     public RutaResponseDTO createRuta(RutaRequestDTO dto) {
 
