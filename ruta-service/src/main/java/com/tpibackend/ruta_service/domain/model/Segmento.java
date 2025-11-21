@@ -33,8 +33,11 @@ public class Segmento {
     private BigDecimal destLat;
     private BigDecimal destLng;
 
-    private String segmentType;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private SegmentType segmentType;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal estimatedDistanceKm;
