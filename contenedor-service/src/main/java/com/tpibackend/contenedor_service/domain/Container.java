@@ -35,6 +35,12 @@ public class Container {
     Long clientId;
 
     public static Container createNew(BigDecimal weightKg, BigDecimal volumeM3, Long clientId) {
-        return new Container(null, UUID.randomUUID().toString(), weightKg, volumeM3, clientId);
+        return new Container(null, generateCode(String.valueOf(clientId)), weightKg, volumeM3, clientId);
     }
+    public static String generateCode(String clientId) {
+        UUID uuid = UUID.randomUUID();
+        String corto = uuid.toString().substring(0, 8).toUpperCase();
+        return "CONT-" + corto + clientId;
+    }
+
 }

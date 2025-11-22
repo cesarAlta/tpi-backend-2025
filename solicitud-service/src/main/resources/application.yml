@@ -15,9 +15,14 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: 'create-drop'
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+cliente-service:
+  url: http://cliente-service:8082/api/clientes
+contenedor-service:
+    url: http://contenedor-service:8083/api/contenedores

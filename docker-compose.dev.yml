@@ -82,8 +82,8 @@ services:
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
     depends_on:
       - clientes-db
-    expose:
-      - "8082"
+    ports:
+      - "8082:8082"
     networks:
       - clientes-network
       - contenedor-network
@@ -170,11 +170,51 @@ services:
       - clientes-network
     restart: always
 
+
+#CHequeado tarifas
+
+postgres_tarifa:
+  image: postgres:16
+  container_name: postgres_tarifa
+  environment:
+    POSTGRES_DB: tarifa_db
+    POSTGRES_USER: tarifa_user
+    POSTGRES_PASSWORD: tarifa_pass
+  ports:
+      - "5439:5432"
+  volumes:
+    - tarifa_data:/var/lib/postgresql/data
+  networks:
+    - tpi-net
+
+tarifa-service:
+  build:
+    context: ../tarifa-service
+    dockerfile: Dockerfile
+  container_name: tarifa-service
+  ports:
+    - "8087:8087"
+  depends_on:
+    - postgres_tarifa
+  environment:
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_tarifa:5432/tarifa_db
+    SPRING_DATASOURCE_USERNAME: tarifa_user
+    SPRING_DATASOURCE_PASSWORD: tarifa_pass
+
+    #verificar
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+  networks:
+    - tpi-net
+
+
+
+
 volumes:
   contenedor-data:
   keycloak-data:
   clientes-data:
   solicitud-data:
+  tarifa_data:
 
 
 networks:
@@ -185,4 +225,6 @@ networks:
   solicitud-network:
     driver: bridge
   contenedor-network:
+    driver: bridge
+  tpi-net:
     driver: bridge

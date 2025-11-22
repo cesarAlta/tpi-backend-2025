@@ -8,12 +8,14 @@ import com.tpibakend.solicitud_service.domain.port.out.RouteWebClientPort;
 import com.tpibakend.solicitud_service.infraestructure.adapter.dto.ClientCreateRequest;
 import com.tpibakend.solicitud_service.infraestructure.adapter.dto.CreateContainerRequest;
 import com.tpibakend.solicitud_service.infraestructure.controller.dto.RequestCreateRequest;
-import com.tpibakend.solicitud_service.infraestructure.controller.dto.RequestResponse;
 import com.tpibakend.solicitud_service.infraestructure.persistence.SpringDataRequestRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -26,25 +28,32 @@ public class CreateRequestUseCaseImpl implements CreateRequestUseCase {
     SpringDataRequestRepository requestRepository;
 
     @Override
-    public Request execute(RequestCreateRequest requestCreateRequest) {
-        Long clientId = clientWebClientPort.getByDocument(requestCreateRequest.clientDocument())
-                .orElse(clientWebClientPort.createClient(
+    public Request execute(RequestCreateRequest requestCreateRequest, Jwt jwt) {
+        String keycloakId = jwt.getSubject();
+
+        Long clientId = clientWebClientPort.getClientIdByKeycloakId(keycloakId)
+                .orElseGet(()-> clientWebClientPort.createClient(
                         new ClientCreateRequest(
                                 requestCreateRequest.clientName(),
                                 requestCreateRequest.clientDocument(),
                                 requestCreateRequest.clientEmail(),
-                                requestCreateRequest.clientPhone()
+                                requestCreateRequest.clientPhone(),
+                                keycloakId
                         )
                 ));
-        Long containerId = containerWebClientPort.createContainer(new CreateContainerRequest(
-                requestCreateRequest.containerWeight(),
-                requestCreateRequest.containerVolume(),
-                clientId
-        ));
+        Long containerId = containerWebClientPort.createContainer(
+                new CreateContainerRequest(
+                        requestCreateRequest.containerWeight(),
+                        requestCreateRequest.containerVolume(),
+                        clientId
+                ));
 
-        String requestNumber = String.valueOf(requestRepository.count());
+        String requestNumber = codeRequest(requestRepository.count() + 1);
         Request request = Request.createDraftRequest(clientId, containerId, requestNumber);
 
         return requestRepository.save(request);
+    }
+    private String codeRequest(Long num) {
+        return String.format("%05d", num);
     }
 }

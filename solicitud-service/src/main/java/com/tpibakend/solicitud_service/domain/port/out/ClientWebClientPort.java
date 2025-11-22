@@ -5,7 +5,6 @@ import com.tpibakend.solicitud_service.infraestructure.adapter.dto.ClientCreateR
 import java.util.Optional;
 
 public interface ClientWebClientPort {
-    boolean existsById(Long id);
     Long createClient(ClientCreateRequest request);
-    Optional<Long> getByDocument(String s);
+    Optional<Long> getClientIdByKeycloakId(String keycloakId);
 }

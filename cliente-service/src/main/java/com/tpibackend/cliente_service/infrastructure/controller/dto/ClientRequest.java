@@ -9,6 +9,7 @@ public record ClientRequest(
         String email,
         @NotBlank(message = "El documento es requerido")
         String document,
-        String phone
+        String phone,
+        String keycloakId
 ) {
 }

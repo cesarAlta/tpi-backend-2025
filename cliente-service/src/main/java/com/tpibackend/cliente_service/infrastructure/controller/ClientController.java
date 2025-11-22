@@ -7,10 +7,15 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/clientes")
@@ -32,15 +37,19 @@ public class ClientController {
         return ResponseEntity.ok(clients);
     }
 
-    @GetMapping("/document/{document}")
-    ResponseEntity<?> getByDocument(@PathVariable String document) {
-        Long id  = clientService.getByDocument(document);
-        return ResponseEntity.ok(id);
+    @GetMapping("/keycloak/{keycloakId}")
+    ResponseEntity<?> getClientIdByKeycloakId(@PathVariable String keycloakId) {
+        Long clientId = clientService.getClientIdByKeycloakId(keycloakId);
+        if(Objects.isNull(clientId)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(Map.of("clientId", clientId));
     }
 
     @PostMapping
     ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientRequest) {
-        return ResponseEntity.ok("Create client endpoint");
+        Long clientId = clientService.registerClient(clientRequest);
+        return ResponseEntity.ok(Map.of("clientId", clientId));
     }
 
 }

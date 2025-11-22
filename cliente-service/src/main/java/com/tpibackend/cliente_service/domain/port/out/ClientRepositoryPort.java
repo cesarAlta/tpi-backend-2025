@@ -7,8 +7,7 @@ import java.util.Optional;
 
 public interface ClientRepositoryPort {
     Client save(Client client);
-    Optional<Client> findByDocument(String document);
     List<Client> findAll();
-
     Optional<Client> findById(Long id);
+    Optional<Client> findByKeycloakId(String keycloakId);
 }

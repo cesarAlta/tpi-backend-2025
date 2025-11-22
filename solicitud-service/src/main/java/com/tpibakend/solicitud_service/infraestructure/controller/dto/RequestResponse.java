@@ -1,6 +1,7 @@
 package com.tpibakend.solicitud_service.infraestructure.controller.dto;
 
 import com.tpibakend.solicitud_service.domain.History;
+import com.tpibakend.solicitud_service.domain.Status;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +12,7 @@ public record RequestResponse (
             String requestNumber,
             Long clientId,
             Long containerId,
-            List<History> histories,
+            StatusResponse currentStatus,
             BigDecimal estimatedCost,
             Integer estimatedTimeMin,
             BigDecimal finalCost,

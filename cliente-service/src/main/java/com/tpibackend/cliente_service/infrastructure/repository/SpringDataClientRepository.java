@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SpringDataClientRepository extends JpaRepository<Client,Long> {
-    Optional<Client> findByDocument(String document);
+public interface SpringDataClientRepository extends JpaRepository<Client, Long> {
+    Optional<Client> findByKeycloakId(String keycloakId);
 }

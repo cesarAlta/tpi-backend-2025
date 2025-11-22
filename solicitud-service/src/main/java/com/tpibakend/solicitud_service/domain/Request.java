@@ -34,7 +34,6 @@ public class Request {
     BigDecimal finalCost;
     Integer actualTimeMin;
     LocalDateTime createdAt;
-    LocalDateTime updatedAt;
 
     public Request(String requestNumber, Long containerId, Long clientId, LocalDateTime createdAt) {
         this.requestNumber = requestNumber;
@@ -42,14 +41,21 @@ public class Request {
         this.clientId = clientId;
         this.createdAt = createdAt;
     }
-    public void addHistory(History h) {
+    public void addNewHistory() {
         if(histories == null) histories = new ArrayList<>();
+        History h = History.CreateDraftHistory(this);
         this.histories.add(h);
     }
     public static Request createDraftRequest(Long clientId, Long containerId, String requestNumber) {
-        Request newRequest =  new Request("REQ-"+requestNumber, containerId, clientId, LocalDateTime.now());
-        History h = History.CreateDraftHistory(newRequest);
-        newRequest.addHistory(h);
+        Request newRequest =  new Request(requestNumber, containerId, clientId, LocalDateTime.now());
+        newRequest.addNewHistory();
         return newRequest;
+    }
+
+    public History getCurrentHistoryState() {
+        if (histories == null || histories.isEmpty()) {
+            return null;
+        }
+        return histories.get(histories.size() - 1);
     }
 }
