@@ -24,11 +24,6 @@ public class JpaClientRepositoryPortAdapter implements ClientRepositoryPort {
     }
 
     @Override
-    public Optional<Client> findByDocument(String document) {
-        return repository.findByDocument(document);
-    }
-
-    @Override
     public List<Client> findAll() {
         return repository.findAll();
     }
@@ -36,5 +31,10 @@ public class JpaClientRepositoryPortAdapter implements ClientRepositoryPort {
     @Override
     public Optional<Client> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public Optional<Client> findByKeycloakId(String keycloakId) {
+        return repository.findByKeycloakId(keycloakId);
     }
 }

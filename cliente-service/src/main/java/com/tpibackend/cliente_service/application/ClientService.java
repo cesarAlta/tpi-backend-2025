@@ -1,5 +1,6 @@
 package com.tpibackend.cliente_service.application;
 
+import com.tpibackend.cliente_service.domain.Client;
 import com.tpibackend.cliente_service.domain.port.in.CreateClientUseCase;
 import com.tpibackend.cliente_service.domain.port.in.FindClientUseCase;
 import com.tpibackend.cliente_service.infrastructure.controller.dto.ClientRequest;
@@ -19,15 +20,17 @@ public class ClientService {
 
     CreateClientUseCase createClientUseCase;
     FindClientUseCase findClientUseCase;
-
     @Transactional
     public Long registerClient(ClientRequest client) {
-        return createClientUseCase.execute(
+
+        Client createdClient = createClientUseCase.execute(
                 client.name(),
                 client.email(),
                 client.document(),
-                client.phone()
+                client.phone(),
+                client.keycloakId()
         );
+        return createdClient.getClientId();
     }
 
     public List<ClientResponse> getAll() {
@@ -40,7 +43,10 @@ public class ClientService {
         return mapper.toClientResponse(findClientUseCase.findById(id));
     }
 
-    public Long getByDocument(String document) {
-        return findClientUseCase.findByDocument(document).getClientId();
+
+    public Long getClientIdByKeycloakId(String keycloakId) {
+        return findClientUseCase.getClientIdByKeycloakId(keycloakId);
     }
+
+
 }

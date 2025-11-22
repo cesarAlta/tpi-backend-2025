@@ -13,7 +13,8 @@ public class mapper {
                 client.getEmail(),
                 client.getDocument(),
                 client.getPhone(),
-                client.getCreatedAt()
+                client.getCreatedAt(),
+                client.getKeycloakId()
         );
     }
 }

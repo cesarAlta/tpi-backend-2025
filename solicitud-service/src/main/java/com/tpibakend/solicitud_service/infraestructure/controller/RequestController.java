@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.metamodel.mapping.ordering.ast.RootSequencePart;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,10 @@ public class RequestController {
     RequestService requestService;
 
     @PostMapping
-    ResponseEntity<?> createRequest(@RequestBody RequestCreateRequest requestCreateRequest) {
-        RequestResponse resp = requestService.createRequest(requestCreateRequest);
+    ResponseEntity<?> createRequest(
+            @RequestBody RequestCreateRequest requestCreateRequest,
+            @AuthenticationPrincipal Jwt jwt) {
+        RequestResponse resp = requestService.createRequest(requestCreateRequest, jwt);
         return ResponseEntity.ok().body(resp);
     }
 

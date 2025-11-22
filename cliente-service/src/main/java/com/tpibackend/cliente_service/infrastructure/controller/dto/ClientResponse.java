@@ -8,6 +8,7 @@ public record ClientResponse(
         String email,
         String document,
         String phone,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String keycloakId
 ) {
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/contenedores")
@@ -22,12 +23,12 @@ public class ContainerController {
 
     @PostMapping
     ResponseEntity<?> createContainer(@Valid @RequestBody ContainerRequest request) {
-        val container = containerService.createContainer(request);
-        return ResponseEntity.ok(container);
+        Long containerId = containerService.createContainer(request);
+        return ResponseEntity.ok(Map.of("containerId", containerId));
     }
     @GetMapping("/{id}")
     ResponseEntity<?> getContainer(@PathVariable Long id) {
-        val containerResponse = containerService.getContainer(id);
+        ContainerResponse containerResponse = containerService.getContainer(id);
         return ResponseEntity.ok(containerResponse);
     }
     @GetMapping

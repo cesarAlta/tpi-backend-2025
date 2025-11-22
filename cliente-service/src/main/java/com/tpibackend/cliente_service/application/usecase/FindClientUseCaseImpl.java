@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -27,7 +28,8 @@ public class FindClientUseCaseImpl implements FindClientUseCase {
     }
 
     @Override
-    public Client findByDocument(String document) {
-        return clientRepositoryPort.findByDocument(document).orElseThrow(()-> new ClientException("CLIENT_NOT_FOUND"));
+    public Long getClientIdByKeycloakId(String keycloakId) {
+        Optional<Client> client = clientRepositoryPort.findByKeycloakId(keycloakId);
+        return client.map(Client::getClientId).orElse(null);
     }
 }

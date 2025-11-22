@@ -4,6 +4,6 @@ public record ClientCreateRequest(
         String name,
         String document,
         String email,
-        String phone
-) {
+        String phone,
+        String keycloakId) {
 }
