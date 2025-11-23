@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8083
 
 spring:
   application:
@@ -23,6 +23,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 cliente-service:
-  url: http://cliente-service:8082/api/clientes
+  url: http://cliente-service:8081/api/clientes
 contenedor-service:
-    url: http://contenedor-service:8083/api/contenedores
+    url: http://contenedor-service:8082/api/contenedores
+tarifa-service:
+  url: http://tarifa-service:8087/api/contenedores
