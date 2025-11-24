@@ -27,4 +27,6 @@ cliente-service:
 contenedor-service:
     url: http://contenedor-service:8082/api/contenedores
 tarifa-service:
-  url: http://tarifa-service:8087/api/contenedores
+  url: http://tarifa-service:8087/api/tarifas
+ruta-service:
+  url: http://ruta-service:8086/api/rutas

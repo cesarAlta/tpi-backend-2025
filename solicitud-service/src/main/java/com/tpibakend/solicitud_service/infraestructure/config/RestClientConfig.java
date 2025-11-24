@@ -16,6 +16,11 @@ public class RestClientConfig {
     String clienteService;
     @Value("${contenedor-service.url}")
     String contenedorService;
+    @Value("${tarifa-service.url}")
+    String tarifaService;
+    @Value("${ruta-service.url}")
+    String rutaService;
+
 
 
     @Bean
@@ -37,7 +42,14 @@ public class RestClientConfig {
     @Bean
     public RestClient routeServiceClient() {
         return RestClient.builder()
-                .baseUrl("http://camion-service/api/route")
+                .baseUrl(rutaService)
+                .requestInterceptor(requestInterceptor())
+                .build();
+    }
+    @Bean
+    public RestClient tariffServiceClient() {
+        return RestClient.builder()
+                .baseUrl(tarifaService)
                 .requestInterceptor(requestInterceptor())
                 .build();
     }

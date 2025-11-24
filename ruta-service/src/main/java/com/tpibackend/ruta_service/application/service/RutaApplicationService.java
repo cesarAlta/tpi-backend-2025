@@ -5,12 +5,15 @@ import com.tpibackend.ruta_service.application.dto.RutaResponseDTO;
 import com.tpibackend.ruta_service.domain.model.Ruta;
 import com.tpibackend.ruta_service.infrastructure.client.GeoApiClient;
 import com.tpibackend.ruta_service.infrastructure.client.dto.DistanciaDTO;
+import com.tpibackend.ruta_service.infrastructure.controller.dto.KmTiempoEstimadoConsumoProm;
 import com.tpibackend.ruta_service.infrastructure.repository.JpaRutaRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.AccessLevel;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 
 @Service
@@ -20,8 +23,7 @@ import org.springframework.stereotype.Service;
 public class RutaApplicationService {
 
     JpaRutaRepository rutaRepository;
-
-    private final GeoApiClient geoApiClient;
+    GeoApiClient geoApiClient;
 
     public DistanciaDTO calcularDistancia(String origen, String destino) {
         return geoApiClient.obtenerDistancia(origen, destino);
@@ -30,8 +32,14 @@ public class RutaApplicationService {
     public RutaResponseDTO createRuta(RutaRequestDTO dto) {
 
         // Ruta nueva
+//        Ruta nuevaRuta = Ruta.createRuta(
+//                dto.origenLat(),
+//                dto.ddestinoLng(),
+//                dto.destinoLat(),
+//                dto.ddestinoLng()
+//        );
         Ruta ruta = new Ruta();
-        ruta.setRequestId(dto.getRequestId());
+        ruta.setRequestId(1L);
         ruta.setTotalTramos(0);
         ruta.setTotalDepots(0);
 
@@ -45,6 +53,21 @@ public class RutaApplicationService {
                 .orElseThrow(() -> new RuntimeException("RUTA_NOT_FOUND"));
 
         return RutaResponseDTO.from(ruta);
+    }
+
+    public KmTiempoEstimadoConsumoProm calcularDistanciaDirectaYTiempoEstimado(Double origenLat, Double origenLon, Double destinoLat, Double destinoLon) {
+        DistanciaDTO distanciaDTO = geoApiClient.obtenerDistancia(
+                origenLat + "," + origenLon,
+                destinoLat + "," + destinoLon
+        );
+
+        Double distanciaKm = distanciaDTO.getKilometros();
+        String tiempoMin = distanciaDTO.getDuracionTexto();
+
+        // Supongamos un consumo promedio de 8 litros cada 100 km
+        BigDecimal consumoPromedio = BigDecimal.valueOf((distanciaKm * 8) / 100);
+
+        return new KmTiempoEstimadoConsumoProm(distanciaKm, tiempoMin, consumoPromedio);
     }
 }
 

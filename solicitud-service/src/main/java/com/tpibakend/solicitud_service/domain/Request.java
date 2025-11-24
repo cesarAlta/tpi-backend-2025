@@ -35,19 +35,59 @@ public class Request {
     Integer actualTimeMin;
     LocalDateTime createdAt;
 
-    public Request(String requestNumber, Long containerId, Long clientId, LocalDateTime createdAt) {
+    Double originLat;
+    Double originLng;
+    String originAddress;
+    Double destinationLat;
+    Double destinationLng;
+    String destinationAddress;
+
+    public Request(String requestNumber, Long containerId, Long clientId,
+                   LocalDateTime now, Double originLat, Double originLng,
+                   String originAddress, Double destinationLat, Double destinationLng,
+                   String destinationAddress,BigDecimal estimatedCost, Integer estimatedTimeMin) {
         this.requestNumber = requestNumber;
         this.containerId = containerId;
         this.clientId = clientId;
-        this.createdAt = createdAt;
+        this.createdAt = now;
+        this.originLat = originLat;
+        this.originLng = originLng;
+        this.originAddress = originAddress;
+        this.destinationLat = destinationLat;
+        this.destinationLng = destinationLng;
+        this.destinationAddress = destinationAddress;
+        this.estimatedCost = estimatedCost;
+        this.estimatedTimeMin = estimatedTimeMin;
     }
+
     public void addNewHistory() {
-        if(histories == null) histories = new ArrayList<>();
+        if (histories == null) histories = new ArrayList<>();
         History h = History.CreateDraftHistory(this);
         this.histories.add(h);
     }
-    public static Request createDraftRequest(Long clientId, Long containerId, String requestNumber) {
-        Request newRequest =  new Request(requestNumber, containerId, clientId, LocalDateTime.now());
+
+    public static Request createDraftRequest(Long clientId,
+                                             Long containerId,
+                                             String requestNumber,
+                                             Double originLat,
+                                             Double originLng,
+                                             String originAddress,
+                                             Double destinationLat,
+                                             Double destinationLng,
+                                             String destinationAddress,
+                                             BigDecimal estimatedCost,
+                                             Integer estimatedTimeMin
+    ) {
+        Request newRequest = new Request(requestNumber, containerId, clientId, LocalDateTime.now(),
+                originLat,
+                originLng,
+                originAddress,
+                destinationLat,
+                destinationLng,
+                destinationAddress,
+                estimatedCost,
+                estimatedTimeMin
+        );
         newRequest.addNewHistory();
         return newRequest;
     }

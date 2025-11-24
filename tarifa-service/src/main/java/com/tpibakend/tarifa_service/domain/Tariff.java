@@ -42,7 +42,7 @@ public class Tariff {
     BigDecimal fuelPricePerLiter;
 
     @Column( precision = 10, scale = 2, nullable = false)
-    BigDecimal fixedChargePerSection;
+    BigDecimal fixedPricePerSection;
 
     @Column( nullable = false, updatable = false)
     LocalDateTime createdAt;

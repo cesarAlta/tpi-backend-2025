@@ -8,9 +8,12 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/tarifas")
@@ -30,6 +33,17 @@ public class TariffController {
       List<TariffResponse> res = tariffService.getAll();
       return ResponseEntity.ok(res);
     }
+    @GetMapping("/estimated-cost")
+    public ResponseEntity<?> estimatedCost(
+            @RequestParam Double averageDistance,
+            @RequestParam Double contVol,
+            @RequestParam Double contWeight,
+            @RequestParam Double consumoProm
+    ){
+        BigDecimal res = tariffService.estimatedCost(averageDistance, contVol, contWeight, consumoProm);
+      return ResponseEntity.ok(Map.of("estimatedCost", res));
+    }
+
 
 
 }

@@ -40,4 +40,10 @@ public class RequestController {
         List<RequestResponse> res = requestService.getAll();
         return ResponseEntity.ok().body(res);
     }
+    //////// aqui
+//    @GetMapping("/{id}/estado")
+//    ResponseEntity<?> status() {
+//        List<StatusResponse> res = requestService.status();
+//        return ResponseEntity.ok().body(res);
+//    }
 }

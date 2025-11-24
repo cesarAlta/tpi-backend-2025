@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -24,5 +25,10 @@ public class JpaTariffAdapter implements TariffRepositoryPort {
     @Override
     public List<Tariff> findAll() {
         return springDataTariff.findAll();
+    }
+
+    @Override
+    public Tariff findLatestTariffByWeightAndVol(BigDecimal contWeight, BigDecimal contVol) {
+        return springDataTariff.findLatestTariffByWeightAndVol(contWeight, contVol);
     }
 }

@@ -9,11 +9,11 @@ public record RequestCreateRequest(
         String clientPhone,
         BigDecimal containerWeight,
         BigDecimal containerVolume,
-        BigDecimal originLat,
-        BigDecimal originLng,
+        Double originLat,
+        Double originLng,
         String originAddress,
-        BigDecimal destinationLat,
-        BigDecimal destinationLng,
+        Double destinationLat,
+        Double destinationLng,
         String destinationAddress
 ) {
 }
