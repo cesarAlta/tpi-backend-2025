@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 
 
 @Service
-@Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RutaApplicationService {
@@ -55,7 +54,8 @@ public class RutaApplicationService {
         return RutaResponseDTO.from(ruta);
     }
 
-    public KmTiempoEstimadoConsumoProm calcularDistanciaDirectaYTiempoEstimado(Double origenLat, Double origenLon, Double destinoLat, Double destinoLon) {
+    public KmTiempoEstimadoConsumoProm calcularDistanciaDirectaYTiempoEstimado(Double origenLat, Double origenLon,
+                                                                               Double destinoLat, Double destinoLon) {
         DistanciaDTO distanciaDTO = geoApiClient.obtenerDistancia(
                 origenLat + "," + origenLon,
                 destinoLat + "," + destinoLon

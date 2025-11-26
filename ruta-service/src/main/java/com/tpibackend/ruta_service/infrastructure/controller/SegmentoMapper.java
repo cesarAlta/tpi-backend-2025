@@ -1,7 +1,9 @@
 package com.tpibackend.ruta_service.infrastructure.controller;
 
 import com.tpibackend.ruta_service.domain.model.Ruta;
+import com.tpibackend.ruta_service.domain.model.SegmentType;
 import com.tpibackend.ruta_service.domain.model.Segmento;
+import com.tpibackend.ruta_service.domain.model.Status;
 import com.tpibackend.ruta_service.infrastructure.controller.dto.SegmentoRequest;
 import com.tpibackend.ruta_service.infrastructure.controller.dto.SegmentoResponse;
 
@@ -44,9 +46,9 @@ public class SegmentoMapper {
         s.setOriginLng(req.getOriginLng());
         s.setDestLat(req.getDestLat());
         s.setDestLng(req.getDestLng());
-        s.setSegmentType(req.getSegmentType());
+        s.setSegmentType(SegmentType.valueOf(req.getSegmentType()));
         s.setEstimatedDistanceKm(req.getEstimatedDistanceKm());
-        s.setStatus("PENDING"); // o lo que uses por defecto
+        s.setStatus(Status.ASIGNADO); // o lo que uses por defecto
 
         return s;
     }
@@ -64,9 +66,9 @@ public class SegmentoMapper {
         r.setDestLat(s.getDestLat());
         r.setDestLng(s.getDestLng());
 
-        r.setSegmentType(s.getSegmentType());
+        r.setSegmentType(s.getSegmentType().toString());
         r.setEstimatedDistanceKm(s.getEstimatedDistanceKm());
-        r.setStatus(s.getStatus());
+        r.setStatus(s.getStatus().toString());
 
         return r;
     }

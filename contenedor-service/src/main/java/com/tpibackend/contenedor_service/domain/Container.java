@@ -31,7 +31,7 @@ public class Container {
     @Column(name = "volume_m3", precision = 10, scale = 3, nullable = false)
     BigDecimal volumeM3;
 
-    @JoinColumn(name = "client_id", nullable = false)
+    @Column( nullable = false)
     Long clientId;
 
     public static Container createNew(BigDecimal weightKg, BigDecimal volumeM3, Long clientId) {

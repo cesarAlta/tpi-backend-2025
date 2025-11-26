@@ -41,6 +41,7 @@ public class CreateRequestUseCaseImpl implements CreateRequestUseCase {
                                 keycloakId
                         )
                 ));
+
         Long containerId = containerWebClientPort.createContainer(
                 new CreateContainerRequest(
                         requestCreateRequest.containerWeight(),
@@ -48,14 +49,15 @@ public class CreateRequestUseCaseImpl implements CreateRequestUseCase {
                         clientId
                 ));
 
-        KmTiempoEstimadoConsumoProm kmTiempoEstimadoConsumoProm = routeServicePort.getDistanciaDirecta(
-                new OriginDestination(
-                        requestCreateRequest.originLat(),
-                        requestCreateRequest.originLng(),
-                        requestCreateRequest.destinationLat(),
-                        requestCreateRequest.destinationLng()
-                )
-        );
+        KmTiempoEstimadoConsumoProm kmTiempoEstimadoConsumoProm = routeServicePort
+                .getDistanciaDirecta(
+                        new OriginDestination(
+                                requestCreateRequest.originLat(),
+                                requestCreateRequest.originLng(),
+                                requestCreateRequest.destinationLat(),
+                                requestCreateRequest.destinationLng()
+                        )
+                );
 
         EstimatedTariffResponse estimatedCost = tariffServicePort.getEstimatedRate(
                 new EstimatedTariffRequest(
@@ -67,6 +69,7 @@ public class CreateRequestUseCaseImpl implements CreateRequestUseCase {
                 ));
 
         String requestNumber = codeRequest(requestRepository.count() + 1);
+
         Request request = Request.createDraftRequest(clientId, containerId, requestNumber,
                 requestCreateRequest.originLat(),
                 requestCreateRequest.originLng(),

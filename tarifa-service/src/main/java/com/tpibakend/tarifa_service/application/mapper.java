@@ -16,7 +16,7 @@ public class mapper {
                 tariff.getWeightRangeMax(),
                 tariff.getStorageCostPerDay(),
                 tariff.getFuelPricePerLiter(),
-                tariff.getFixedChargePerSection(),
+                tariff.getFixedPricePerSection(),
                 tariff.getCreatedAt()
         );
     }

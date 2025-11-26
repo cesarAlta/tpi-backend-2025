@@ -13,13 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@Getter(AccessLevel.PACKAGE)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SegmentoApplicationService {
 
-    private final JpaSegmentoRepository segmentoRepository;
-    private final JpaRutaRepository rutaRepository;
+   JpaSegmentoRepository segmentoRepository;
+     JpaRutaRepository rutaRepository;
 
     public Ruta getRuta(Long rutaId) {
         return rutaRepository.findById(rutaId)
@@ -36,7 +35,7 @@ public class SegmentoApplicationService {
     }
 
     public List<Segmento> getSegmentosByRuta(Long rutaId) {
-        return segmentoRepository.findByRutaId(rutaId);
+        return segmentoRepository.findByRutaRutaId(rutaId);
     }
 
     public Segmento updateSegmento(Segmento segmento) {

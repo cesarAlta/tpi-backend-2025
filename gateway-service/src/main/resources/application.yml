@@ -11,12 +11,14 @@ server:
 
 clientes-service:
   url: http://cliente-service:8081
-
 contenedor-service:
   url: http://contenedor-service:8082
-
 solicitud-service:
-  url: http://solicitud-service:8084
+  url: http://solicitud-service:8083
+ruta-service:
+  url: http://ruta-service:8086
+tarifa-service:
+  url: http://tarifa-service:8087
 
   cloud:
     gateway:

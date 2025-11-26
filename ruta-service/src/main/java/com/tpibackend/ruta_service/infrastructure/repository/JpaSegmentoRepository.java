@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface JpaSegmentoRepository extends JpaRepository<Segmento, Long> {
 
-    // Devuelve todos los segmentos pertenecientes a una ruta concreta
-    List<Segmento> findByRutaId(Long rutaId);
+//     Devuelve todos los segmentos pertenecientes a una ruta concreta
+    List<Segmento> findByRutaRutaId(Long rutaId);
 }

@@ -44,8 +44,8 @@ public class SegmentoResponseDTO {
         dto.setDestLat(s.getDestLat());
         dto.setDestLng(s.getDestLng());
 
-        dto.setSegmentType(s.getSegmentType());
-        dto.setStatus(s.getStatus());
+        dto.setSegmentType(s.getSegmentType().toString());
+        dto.setStatus(s.getStatus().toString());
 
         dto.setEstimatedDistanceKm(s.getEstimatedDistanceKm());
         dto.setEstimatedTimeMin(s.getEstimatedTimeMin());

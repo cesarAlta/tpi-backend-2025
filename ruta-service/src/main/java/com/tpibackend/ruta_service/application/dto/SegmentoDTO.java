@@ -27,8 +27,8 @@ public class SegmentoDTO {
         dto.setOriginLng(s.getOriginLng());
         dto.setDestLat(s.getDestLat());
         dto.setDestLng(s.getDestLng());
-        dto.setSegmentType(s.getSegmentType());
-        dto.setStatus(s.getStatus());
+        dto.setSegmentType(s.getSegmentType().toString());
+        dto.setStatus(s.getStatus().toString());
         return dto;
     }
 }

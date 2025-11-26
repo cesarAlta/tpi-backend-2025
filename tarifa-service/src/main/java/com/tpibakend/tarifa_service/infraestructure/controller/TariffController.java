@@ -40,7 +40,9 @@ public class TariffController {
             @RequestParam Double contWeight,
             @RequestParam Double consumoProm
     ){
-        BigDecimal res = tariffService.estimatedCost(averageDistance, contVol, contWeight, consumoProm);
+        BigDecimal res = tariffService.estimatedCost(averageDistance, contVol,
+                contWeight, consumoProm);
+
       return ResponseEntity.ok(Map.of("estimatedCost", res));
     }
 

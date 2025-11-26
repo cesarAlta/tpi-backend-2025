@@ -10,7 +10,7 @@ services:
     volumes:
       - keycloak-data:/var/lib/postgresql/data
     networks:
-      - keycloak_net
+      - keycloak-net
   # KEYCLOAK (última versión estable)
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.3
@@ -32,7 +32,8 @@ services:
     depends_on:
       - keycloak-db
     networks:
-      - keycloak_net
+      - keycloak-net
+      - tpi-net
     restart: always
 
   gateway:
@@ -47,8 +48,7 @@ services:
     depends_on:
       - keycloak
     networks:
-      - keycloak_net
-      - clientes-network
+      - tpi-net
 
   # MICROSERVICIO CLIENTE DB
   clientes-db:
@@ -67,7 +67,6 @@ services:
       - clientes-network
 
   # MICROSERVICIO CLIENTE
-
   cliente-service:
     container_name: cliente-service
     image: tpi/cliente-service
@@ -86,9 +85,7 @@ services:
       - "8082:8081"
     networks:
       - clientes-network
-      - contenedor-network
-      - solicitud-network
-      - keycloak_net
+      - tpi-net
     restart: always
 
   # MICROSERVICIO SOLICITUD
@@ -126,10 +123,9 @@ services:
       - "8083"
     networks:
       - solicitud-network
-      - keycloak_net
-      - clientes-network
-    restart: always 
-  
+      - tpi-net
+    restart: always
+
   # MICROSERVICIO CONTENEDOR DB
   contenedor-db:
     image: postgres:15
@@ -165,49 +161,90 @@ services:
       - "8082"
     networks:
       - contenedor-network
-      - solicitud-network
-      - keycloak_net
-      - clientes-network
+      - tpi-net
     restart: always
 
+#Chequeado tarifas
 
-#CHequeado tarifas
-
-postgres_tarifa:
-  image: postgres:16
-  container_name: postgres_tarifa
-  environment:
-    POSTGRES_DB: tarifa_db
-    POSTGRES_USER: tarifa_user
-    POSTGRES_PASSWORD: tarifa_pass
-  ports:
+  postgres_tarifa:
+    image: postgres:16
+    container_name: postgres_tarifa
+    environment:
+      POSTGRES_DB: tarifa_db
+      POSTGRES_USER: tarifa_user
+      POSTGRES_PASSWORD: tarifa_pass
+    ports:
       - "5439:5432"
-  volumes:
-    - tarifa_data:/var/lib/postgresql/data
-  networks:
-    - tpi-net
+    volumes:
+      - tarifa_data:/var/lib/postgresql/data
+    networks:
+      - tarifa-network
 
-tarifa-service:
-  build:
-    context: ../tarifa-service
-    dockerfile: Dockerfile
-  container_name: tarifa-service
-  ports:
-    - "8087:8087"
-  depends_on:
-    - postgres_tarifa
-  environment:
-    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_tarifa:5432/tarifa_db
-    SPRING_DATASOURCE_USERNAME: tarifa_user
-    SPRING_DATASOURCE_PASSWORD: tarifa_pass
+  tarifa-service:
+    build:
+      context: ./tarifa-service
+      dockerfile: Dockerfile
+    container_name: tarifa-service
+    ports:
+      - "8087:8087"
+    depends_on:
+      - postgres_tarifa
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_tarifa:5432/tarifa_db
+      SPRING_DATASOURCE_USERNAME: tarifa_user
+      SPRING_DATASOURCE_PASSWORD: tarifa_pass
 
-    #verificar
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
-  networks:
-    - tpi-net
+      #verificar
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    networks:
+      - tarifa-network
+      - tpi-net
 
+  #Chequeado RUTAS
+  postgres_ruta:
+    image: postgres:16
+    container_name: postgres_ruta
+    environment:
+      POSTGRES_DB: ruta_db
+      POSTGRES_USER: ruta_user
+      POSTGRES_PASSWORD: ruta_pass
+    ports:
+      - "5438:5432"
+    volumes:
+      - ruta_data:/var/lib/postgresql/data
+    networks:
+      - ruta-network
 
+  ruta-service:
+    build:
+      context: ./ruta-service
+      dockerfile: Dockerfile
+    container_name: ruta-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      - postgres_ruta
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_ruta:5432/ruta_db
+      SPRING_DATASOURCE_USERNAME: ruta_user
+      SPRING_DATASOURCE_PASSWORD: ruta_pass
 
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: http://keycloak:8080/realms/tpi-backend
+    networks:
+      - ruta-network
+      - tpi-net
+#GEOAPI
+  geoapi:
+    build:
+      context: ./geoapi
+      dockerfile: Dockerfile
+    container_name: geoapi
+    ports:
+      - "8088:8088"
+    environment:
+      GOOGLE_MAPS_APIKEY: ${GOOGLE_MAPS_APIKEY}
+    networks:
+      - ruta-network
 
 volumes:
   contenedor-data:
@@ -215,16 +252,21 @@ volumes:
   clientes-data:
   solicitud-data:
   tarifa_data:
+  ruta_data:
 
 
 networks:
-  clientes-network:
+  keycloak-net:
     driver: bridge
-  keycloak_net:
+  clientes-network:
     driver: bridge
   solicitud-network:
     driver: bridge
   contenedor-network:
+    driver: bridge
+  tarifa-network:
+    driver: bridge
+  ruta-network:
     driver: bridge
   tpi-net:
     driver: bridge

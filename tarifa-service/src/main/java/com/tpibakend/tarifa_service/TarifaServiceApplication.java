@@ -8,6 +8,7 @@ public class TarifaServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TarifaServiceApplication.class, args);
+
 	}
 
 }

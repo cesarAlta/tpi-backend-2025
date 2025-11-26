@@ -11,6 +11,6 @@ import java.math.BigDecimal;
 public interface SpringDataTariff extends JpaRepository<Tariff, Long> {
     Tariff findTopByOrderByCreatedAtDesc();
 
-    @Query("SELECT t FROM Tariff t WHERE :contWeight BETWEEN t.minWeight AND t.maxWeight AND :contVol BETWEEN t.minVol AND t.maxVol ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Tariff t WHERE :contWeight BETWEEN t.weightRangeMin AND t.weightRangeMax AND :contVol BETWEEN t.volumeRangeMin AND t.volumeRangeMax ORDER BY t.createdAt DESC")
     Tariff findLatestTariffByWeightAndVol(BigDecimal contWeight, BigDecimal contVol);
 }

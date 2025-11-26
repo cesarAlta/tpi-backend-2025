@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "ruta")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,26 +20,28 @@ public class Ruta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "route_id")
-    private Long rutaId;
+    Long rutaId;
 
-    @Column(name = "request_id", nullable = false)
-    private Long requestId;
+    @Column(nullable = false)
+    Long requestId;
 
-    private Integer totalTramos;
-    private Integer totalDepots;
+    Integer totalTramos;
+    Integer totalDepots;
 
     @Column(precision = 10, scale = 2)
-    private BigDecimal totalDistanceKm;
+    BigDecimal totalDistanceKm;
 
-    private Integer estimatedTimeMin;
+    Integer estimatedTimeMin;
 
     @Column(precision = 12, scale = 2)
-    private BigDecimal estimatedCost;
+    BigDecimal estimatedCost;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "ruta", cascade = CascadeType.ALL)
-    private List<Segmento> segmentos = new ArrayList<>();
+    List<Segmento> segmentos = new ArrayList<>();
+
+    @Column(nullable = false)
+    Long solicitudId;
 }
